@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { ObjectGradient, updateObjectGradients, xGradient, zGradient, redBand, blueBand, greenBand, redBand2, blueBand2, greenBand2 } from './ObjectGradient.js'
 import { addStar } from './Stars.js'
 import { CubesOrbit } from './CubesOrbit.js'
-
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js'
 
 const scene = new THREE.Scene() // Object container
 const FOV = 75 // Field of View, in degrees
@@ -15,6 +15,10 @@ const renderer = new THREE.WebGLRenderer()
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
+
+// VR support
+document.body.appendChild(VRButton.createButton(renderer))
+renderer.xr.enabled = true
 
 const controls = new OrbitControls(camera, renderer.domElement)
 
@@ -101,4 +105,7 @@ function rotateCamera() {
     camera.lookAt(scene.position)
 }
 
-renderer.setAnimationLoop(animate)
+renderer.setAnimationLoop(() => {
+    renderer.render(scene, camera)
+    animate()
+})
