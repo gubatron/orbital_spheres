@@ -40,10 +40,9 @@ export class CubesOrbit {
             const x = this.centerX + Math.sin(angleInRadians) * this.radius
             const z = this.centerZ + Math.cos(angleInRadians) * this.radius
             const cube = new Cube(x, this.centerY, z, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
-            const yRotation = angleInRadians//-currentAngle/360
+            const yRotation = angleInRadians
             cube.rotate(0, yRotation, 0)
             this.cubes.push(cube)
-            // todo, rotate the cube in Y axis towards the center considering its current angle
         }
     }
 
