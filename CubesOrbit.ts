@@ -40,7 +40,7 @@ export class CubesOrbit {
         this.initCubes(nCubes, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
     }
 
-    initCubes(nCubes:number, cubeWidth:number, cubeHeight:number, cubeDepth:number, cubeMaterialColor:number) {
+    initCubes(nCubes:number, cubeWidth:number, cubeHeight:number, cubeDepth:number, cubeMaterialColor:number) : void {
         const separationAngle = 360 / nCubes
         let currentAngle = 0
         this.cubes = new Array(nCubes)
@@ -55,7 +55,7 @@ export class CubesOrbit {
         }
     }
 
-    addToScene(scene:Scene) {
+    addToScene(scene:Scene) : void {
         this.cubes.map((c) => {
             scene.add(c.mesh)
         })
