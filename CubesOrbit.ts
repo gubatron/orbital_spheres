@@ -52,10 +52,9 @@ export class CubesOrbit {
             const x = this.centerX + Math.cos(angleInRadians) * this.radius
             const z = this.centerZ + Math.sin(angleInRadians) * this.radius
             const cube = new Cube(x, this.centerY, z, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
-            const yRotation = angleInRadians
-            cube.rotate(0, yRotation, 0)
-            this.cubes.push(cube) 
-            this.radians.push(currentAngle)           
+            cube.rotate(0, angleInRadians, 0)
+            this.cubes.push(cube)
+            this.radians.push(currentAngle)
         }
     }
 
@@ -69,12 +68,14 @@ export class CubesOrbit {
         return this.radius
     }
 
-    rotate(degreeSpeed: number) : void {        
+    rotate(degreeSpeed: number) : void {
+        const rotationInRadians = degreeSpeed * Math.PI / 180
         for (let i=0; i < this.cubes.length; i++) {
-            const cube = this.cubes[i]            
-            this.radians[i] += degreeSpeed * Math.PI / 180
+            const cube = this.cubes[i]
+            this.radians[i] += rotationInRadians
             cube.mesh.position.x = this.centerX + Math.cos(this.radians[i]) * this.radius
             cube.mesh.position.z = this.centerZ + Math.sin(this.radians[i]) * this.radius
+            cube.rotate(0, rotationInRadians, 0)
         }
     }
  }
