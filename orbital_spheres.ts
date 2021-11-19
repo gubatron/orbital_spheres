@@ -1,17 +1,19 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { ObjectGradient, updateObjectGradients, xGradient, zGradient, redBand, blueBand, greenBand, redBand2, blueBand2, greenBand2 } from './ObjectGradient'
-import { addStar } from './Stars'
-import { CubesOrbit } from './CubesOrbit'
-import { VRButton } from 'three/examples/jsm/webxr/VRButton.js'
-import { OrbitSphere } from './OrbitSphere'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import {VRButton} from 'three/examples/jsm/webxr/VRButton'
 
-const scene = new THREE.Scene() // Object container
-const FOV = 75 // Field of View, in degrees
+import {CubesOrbit} from './CubesOrbit'
+import {blueBand, blueBand2, greenBand, greenBand2, ObjectGradient, redBand, redBand2, updateObjectGradients, xGradient, zGradient} from './ObjectGradient'
+import {OrbitSphere} from './OrbitSphere'
+import {addStar} from './Stars'
+
+const scene = new THREE.Scene()  // Object container
+const FOV = 75                   // Field of View, in degrees
 const ASPECT_RATIO = window.innerWidth / window.innerHeight
 const NEAR_CLIPPING_PLANE = 0.1
 const FAR_CLIPPING_PLANE = 1000
-const camera = new THREE.PerspectiveCamera(FOV, ASPECT_RATIO, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE)
+const camera = new THREE.PerspectiveCamera(
+    FOV, ASPECT_RATIO, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE)
 const renderer = new THREE.WebGLRenderer()
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -29,12 +31,10 @@ const gridHelper = new THREE.GridHelper(30, 30)
 const geometry = new THREE.BoxGeometry()
 
 // a mesh basic material requires no external light source
-const material = new THREE.MeshBasicMaterial(
-    { color: 0x00ff00, wireframe: true })
+const material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true})
 
-// this material needs a light    
-const material2 = new THREE.MeshStandardMaterial(
-    { color: 0xffff00 })
+// this material needs a light
+const material2 = new THREE.MeshStandardMaterial({color: 0xffff00})
 
 const pointLight = new THREE.PointLight(0xffffff)
 pointLight.position.set(5, 10, 5)
@@ -48,24 +48,27 @@ const cube = new THREE.Mesh(geometry, material)
 const cube2 = new THREE.Mesh(geometry, material2)
 
 const camXGradient = new ObjectGradient(5, 0, 100)
-const camYGradient = new ObjectGradient(cube.position.y + 3, 0.05, cube.position.y + 3, cube.position.y + 10)
+const camYGradient = new ObjectGradient(
+    cube.position.y + 3, 0.05, cube.position.y + 3, cube.position.y + 10)
 const camZGradient = new ObjectGradient(100, 0.05, -50, 100)
 
 const camRotationSpeed = 0.01
 
-let sphere : OrbitSphere
-let cubeWidth:number = 0.5
-let cubeHeight:number = 0.25
-let cubeDepth:number = cubeWidth
-let radius:number = cubeDepth * 5
-let maxCubesAtEquator:number = 8
-sphere = new OrbitSphere(1, 6, 1, maxCubesAtEquator,cubeWidth,cubeHeight,cubeDepth, 0xffff00)
-let sphere2 = new OrbitSphere(-5, 6, 1, 10,cubeWidth,cubeHeight,cubeDepth, 0xff0000)
+let sphere: OrbitSphere
+let cubeWidth: number = 0.5
+let cubeHeight: number = 0.25
+let cubeDepth: number = cubeWidth
+let radius: number = cubeDepth * 5
+let maxCubesAtEquator: number = 8
+sphere = new OrbitSphere(
+    1, 6, 1, maxCubesAtEquator, cubeWidth, cubeHeight, cubeDepth, 0xffff00)
+let sphere2 =
+    new OrbitSphere(-5, 6, 1, 10, cubeWidth, cubeHeight, cubeDepth, 0xff0000)
 
 // setup the scene
-scene.add(gridHelper) //horizon
-scene.add(pointLight, pointLight2) //lights
-scene.add(cube) //objects
+scene.add(gridHelper)               // horizon
+scene.add(pointLight, pointLight2)  // lights
+scene.add(cube)                     // objects
 scene.add(cube2)
 sphere.addToScene(scene)
 sphere2.addToScene(scene)
@@ -74,7 +77,7 @@ sphere2.addToScene(scene)
 for (let i = 0; i < 2000; i++) addStar(scene)
 
 // World background
-const nebulaTexture = new THREE.TextureLoader().load("/nebula.jpg")
+const nebulaTexture = new THREE.TextureLoader().load('/nebula.jpg')
 
 scene.background = nebulaTexture
 
@@ -88,31 +91,33 @@ camera.position.y = 10
 camera.lookAt(scene.position)
 
 function animate() {
-updateObjectGradients()
-    renderer.render(scene, camera)
+  updateObjectGradients()
+  renderer.render(scene, camera)
 
-    cube.rotation.x = -xGradient.val() * 8
-    cube.rotation.z = -zGradient.val() * 4
-    cube.rotation.y = -cube.rotation.y
+  cube.rotation.x = -xGradient.val() * 8
+  cube.rotation.z = -zGradient.val() * 4
+  cube.rotation.y = -cube.rotation.y
 
-    cube2.rotation.x = -xGradient.val() / 4
-    cube2.rotation.z = zGradient.val() * 4
-    cube2.rotation.y = -cube.rotation.y
+  cube2.rotation.x = -xGradient.val() / 4
+  cube2.rotation.z = zGradient.val() * 4
+  cube2.rotation.y = -cube.rotation.y
 
-    cube.material.color.setRGB(redBand.val(), greenBand.val(), blueBand.val())
-    cube2.material.color.setRGB(redBand2.val(), greenBand2.val(), blueBand2.val())
+  cube.material.color.setRGB(redBand.val(), greenBand.val(), blueBand.val())
+  cube2.material.color.setRGB(redBand2.val(), greenBand2.val(), blueBand2.val())
 
-    rotateCamera()
-    sphere.rotate(1)
-    sphere2.rotate(2)
+  rotateCamera()
+  sphere.rotate(1)
+  sphere2.rotate(2)
 }
 
 function rotateCamera() {
-    var x = camera.position.x
-    var z = camera.position.z
-    camera.position.x = x * Math.cos(camRotationSpeed) + z * Math.sin(camRotationSpeed)
-    camera.position.z = z * Math.cos(camRotationSpeed) - x * Math.sin(camRotationSpeed)
-    camera.lookAt(scene.position)
+  var x = camera.position.x
+  var z = camera.position.z
+  camera.position.x =
+      x * Math.cos(camRotationSpeed) + z * Math.sin(camRotationSpeed)
+  camera.position.z =
+      z * Math.cos(camRotationSpeed) - x * Math.sin(camRotationSpeed)
+  camera.lookAt(scene.position)
 }
 
 renderer.setAnimationLoop(() => {

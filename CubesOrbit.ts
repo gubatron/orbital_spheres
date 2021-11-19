@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Scene } from 'three';
 
 class Cube {
     mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>;
@@ -19,7 +18,7 @@ class Cube {
         this.mesh.rotation.z = z
     }
 
-    addToScene(scene:Scene) {
+    addToScene(scene:THREE.Scene) {
         scene.add(this.mesh)
     }
 }
@@ -41,8 +40,7 @@ export class CubesOrbit {
         this.centerX = x
         this.centerY = y
         this.centerZ = z
-        this.radius = nCubes / (3.1415)//cubeDepth * (nCubes + cubeDepth/2)
-
+        this.radius = nCubes / Math.PI
         this.initCubes(nCubes, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
     }
 
@@ -61,7 +59,7 @@ export class CubesOrbit {
         }
     }
 
-    addToScene(scene:Scene) : void {
+    addToScene(scene:THREE.Scene) : void {
         this.cubes.map((c) => {
             scene.add(c.mesh)
         })
@@ -71,11 +69,10 @@ export class CubesOrbit {
         return this.radius
     }
 
-    rotate(degreeSpeed: number) : void {
-        const radians = degreeSpeed * Math.PI / 180
+    rotate(degreeSpeed: number) : void {        
         for (let i=0; i < this.cubes.length; i++) {
             const cube = this.cubes[i]            
-            this.radians[i] = (this.radians[i] + radians)
+            this.radians[i] += degreeSpeed * Math.PI / 180
             cube.mesh.position.x = this.centerX + Math.cos(this.radians[i]) * this.radius
             cube.mesh.position.z = this.centerZ + Math.sin(this.radians[i]) * this.radius
         }
