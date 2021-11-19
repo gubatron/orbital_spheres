@@ -25,17 +25,23 @@ class Cube {
 }
 
 export class CubesOrbit {
-    private centerX: number;
-    private centerY: number;
-    private centerZ: number;
-    private radius: number;
-    private cubes: Cube[] = [];
+    private centerX: number
+    private centerY: number
+    private centerZ: number
+    private radius: number
+    private cubes: Cube[] = []
+    private radians: number[] = []
 
-    constructor(x:number, y:number, z:number, radius:number, nCubes:number, cubeWidth:number, cubeHeight:number, cubeDepth:number, cubeMaterialColor:number) {
+    constructor(
+        x:number,
+        y:number,
+        z:number,
+        nCubes:number,
+        cubeWidth:number, cubeHeight:number, cubeDepth:number, cubeMaterialColor:number) {
         this.centerX = x
         this.centerY = y
         this.centerZ = z
-        this.radius = radius
+        this.radius = nCubes / (3.1415)//cubeDepth * (nCubes + cubeDepth/2)
 
         this.initCubes(nCubes, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
     }
@@ -43,15 +49,15 @@ export class CubesOrbit {
     initCubes(nCubes:number, cubeWidth:number, cubeHeight:number, cubeDepth:number, cubeMaterialColor:number) : void {
         const separationAngle = 360 / nCubes
         let currentAngle = 0
-        this.cubes = new Array(nCubes)
         for (let i = 0; i < nCubes; i++, currentAngle += separationAngle) {
             const angleInRadians = currentAngle * Math.PI / 180
-            const x = this.centerX + Math.sin(angleInRadians) * this.radius
-            const z = this.centerZ + Math.cos(angleInRadians) * this.radius
+            const x = this.centerX + Math.cos(angleInRadians) * this.radius
+            const z = this.centerZ + Math.sin(angleInRadians) * this.radius
             const cube = new Cube(x, this.centerY, z, cubeWidth, cubeHeight, cubeDepth, cubeMaterialColor)
             const yRotation = angleInRadians
             cube.rotate(0, yRotation, 0)
-            this.cubes.push(cube)            
+            this.cubes.push(cube) 
+            this.radians.push(currentAngle)           
         }
     }
 
@@ -60,5 +66,19 @@ export class CubesOrbit {
             scene.add(c.mesh)
         })
     }
-}
+
+    getRadius() : number {
+        return this.radius
+    }
+
+    rotate(degreeSpeed: number) : void {
+        const radians = degreeSpeed * Math.PI / 180
+        for (let i=0; i < this.cubes.length; i++) {
+            const cube = this.cubes[i]            
+            this.radians[i] = (this.radians[i] + radians)
+            cube.mesh.position.x = this.centerX + Math.cos(this.radians[i]) * this.radius
+            cube.mesh.position.z = this.centerZ + Math.sin(this.radians[i]) * this.radius
+        }
+    }
+ }
 

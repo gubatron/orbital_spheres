@@ -4,6 +4,7 @@ import { ObjectGradient, updateObjectGradients, xGradient, zGradient, redBand, b
 import { addStar } from './Stars'
 import { CubesOrbit } from './CubesOrbit'
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js'
+import { OrbitSphere } from './OrbitSphere'
 
 const scene = new THREE.Scene() // Object container
 const FOV = 75 // Field of View, in degrees
@@ -52,15 +53,22 @@ const camZGradient = new ObjectGradient(100, 0.05, -50, 100)
 
 const camRotationSpeed = 0.01
 
-const cubeOrbit1 = new CubesOrbit(1, 1, 1, 10, 40, 0.5, 0.25, 0.5, 0xff0000)
+let sphere : OrbitSphere
+let cubeWidth:number = 0.5
+let cubeHeight:number = 0.25
+let cubeDepth:number = cubeWidth
+let radius:number = cubeDepth * 5
+let maxCubesAtEquator:number = 8
+sphere = new OrbitSphere(1, 6, 1, maxCubesAtEquator,cubeWidth,cubeHeight,cubeDepth, 0xffff00)
+let sphere2 = new OrbitSphere(-5, 6, 1, 10,cubeWidth,cubeHeight,cubeDepth, 0xff0000)
 
 // setup the scene
 scene.add(gridHelper) //horizon
 scene.add(pointLight, pointLight2) //lights
 scene.add(cube) //objects
 scene.add(cube2)
-
-cubeOrbit1.addToScene(scene)
+sphere.addToScene(scene)
+sphere2.addToScene(scene)
 
 // Load 2000 randomly generated stars
 for (let i = 0; i < 2000; i++) addStar(scene)
@@ -95,6 +103,8 @@ updateObjectGradients()
     cube2.material.color.setRGB(redBand2.val(), greenBand2.val(), blueBand2.val())
 
     rotateCamera()
+    sphere.rotate(1)
+    sphere2.rotate(2)
 }
 
 function rotateCamera() {
